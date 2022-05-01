@@ -14,6 +14,20 @@ const checkFunction = () => {
 const isValid = (s) => {
   // split the characters of the string into an array so they can easily be looped through
   const array = s.split("");
+  const fake = [...array];
+  const order = [];
+
+  /**
+   * 
+   * first loop through the array
+   * check for opening brackets only
+   * store the order in new array
+   * erase the openening brackets from fake array
+   * 
+   * loop through updated fake array
+   * compare to order array to make sure they close in the right order
+   * 
+   */
 
   // If the array contains a non-bracket character, return false
   if (!(array.includes("{") 
@@ -39,32 +53,46 @@ const isValid = (s) => {
   for (let i = 0; i < array.length; i++) {
     switch (array[i]) {
       case "(":
-        // if closing bracket does not match, return false
+        // if next element is a closing bracket and does not match, return false
         if (array[i + 1] === "}" || array[i + 1] === "]") return false;
+        // remove the opening bracket from fake array
+        fake.splice(fake.indexOf("("), 1);
+        // put corresponding closing bracket in order array so as to note the correct order
+        order.unshift(")");
         break;
       case "[":
-        // if closing bracket does not match, return false
+        // if next element is a closing bracket and does not match, return false
         if (array[i + 1] === "}" || array[i + 1] === ")") return false;
+        // remove the opening bracket from fake array
+        fake.splice(fake.indexOf("["), 1);
+        // put corresponding closing bracket in order array so as to note the correct order
+        order.unshift("]");
         break;
       case "{":
-        // if closing bracket does not match, return false
+        // if next element is a closing bracket and does not match, return false
         if (array[i + 1] === "]" || array[i + 1] === ")") return false;
-        break;
-      case ")":
-        // if closing bracket does not match, return false
-        if (array[i - 1] === "{" || array[i - 1] === "[") return false;
-        break;
-      case "]":
-        // if closing bracket does not match, return false
-        if (array[i - 1] === "{" || array[i - 1] === "(") return false;
-        break;
-      case "}":
-        // if closing bracket does not match, return false
-        if (array[i - 1] === "[" || array[i - 1] === "(") return false;
+        // remove the opening bracket from fake array
+        fake.splice(fake.indexOf("{"), 1);
+        // put corresponding closing bracket in order array so as to note the correct order
+        order.unshift("}");
         break;
       default:
+        // check if the bracket just closed itself
+        if ((array[i] === ")" && array[i - 1] === "(") 
+            || (array[i] === "}" && array[i - 1] === "{") 
+            || (array[i] === "]" && array[i - 1] === "[")) {
+          // if it did, remove the closing bracket from the order array
+          order.shift();
+          // also remove the closing bracket from the fake array
+          fake.splice(fake.indexOf(array[i]), 1);
+        }
         break;
     }
+  }
+
+  for (let i = 0; i < fake.length; i++) {
+    // if the closing bracket is not in the correct order, return false
+    if (fake[i] !== order[i]) return false;
   }
 
   return true;
