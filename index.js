@@ -1,3 +1,15 @@
+const inputField = document.querySelector("#input-field");
+const result = document.querySelector("#result");
+
+const checkFunction = () => {
+  result.textContent = "";
+  const response = isValid(inputField.value);
+  const responseHtml = document.createTextNode(response ? "valid" : "invalid");
+  result.appendChild(responseHtml);
+  inputField.value = ""
+}
+
+
 const isValid = function(s) {
 
   const array = s.split("");
