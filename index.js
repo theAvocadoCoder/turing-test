@@ -11,6 +11,14 @@ const checkFunction = () => {
 }
 
 // 
+const scoreFunction = () => {
+  result.textContent = "";
+  const response = calPoints(inputField.value.split(""));
+  const responseHtml = document.createTextNode("" + response);
+  result.appendChild(responseHtml);
+}
+
+// 
 const isValid = (s) => {
   // split the characters of the string into an array so they can easily be looped through
   const array = s.split("");
@@ -97,5 +105,34 @@ const isValid = (s) => {
 
   return true;
 };
-  
+
+const calPoints = (ops) => {
+  let result = null;
+  const record = [];
+
+  for (let i = 0; i < ops.length; i++) {
+    switch (ops[i]) {
+      case "+": 
+        const sum = Number(record[record.length - 1]) + Number(record[record.length - 2]);
+        record.push(sum);        
+        break;
+
+      case "C":
+        record.pop();
+        break;
+
+      case "D":
+        const doubled = Number(record[record.length - 1]) * 2;
+        record.push(doubled);
+        break;
+    
+      default:
+        record.push(Number(ops[i]));
+    }
+  }
+
+  result = record.reduce((prev, curr) => { return Number(prev) + Number(curr) }, 0);
+
+  return result;
+}
   
